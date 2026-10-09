@@ -1,4 +1,4 @@
-# Output speed
+# Paseo TPS
 
 Shows a small, muted “42 tok/s” line after each completed, measurable Pi reply. The value is the streaming speed of the final visible answer, not a session average or whole-turn throughput.
 

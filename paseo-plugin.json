@@ -1,5 +1,6 @@
 {
   "id": "paseo-session-speed",
-  "name": "Output speed",
+  "name": "Paseo TPS",
+  "description": "Visible text streaming speed per Pi response.",
   "requirements": { "paseo": ">=0.11.1" }
 }

@@ -1,10 +1,16 @@
 {
-  "name": "paseo-session-speed",
+  "name": "paseo-tps",
   "private": true,
   "version": "0.4.0",
   "type": "module",
-  "description": "Per-reply token throughput below completed Paseo replies.",
+  "description": "Visible text streaming speed below completed Pi replies in Paseo.",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/yoggu/paseo-tps.git" },
+  "engines": { "node": ">=24" },
   "files": [
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
     "paseo-plugin.json",
     "OVERVIEW.md",
     "index.client.ts",
