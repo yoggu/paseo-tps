@@ -24,11 +24,10 @@ Counts come from the matching Pi session record. Initial waiting, hidden reasoni
 
 Missing usage or timing produces no row. Measurements do not survive a daemon restart. Session text is matched in memory; the plugin makes no external network requests. Plugins are unsandboxed code.
 
-Details: [OVERVIEW.md](OVERVIEW.md) · [SECURITY.md](SECURITY.md)
-
 ## Development
 
 Node.js 24+: `npm ci --ignore-scripts`, `npm run typecheck`, `npm test`.
 Install locally with `paseo plugin install "$PWD"`; reload with `paseo plugin reload paseo-session-speed`.
+Development tooling has known audit warnings (`npm audit`); it is not shipped with the plugin.
 
 [MIT license](LICENSE).
