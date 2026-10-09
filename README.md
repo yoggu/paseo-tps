@@ -1,61 +1,34 @@
 # Paseo TPS
 
-Shows a small `42 tok/s` line below each measurable Pi response in [Paseo](https://paseo.sh). Measures **visible text streaming speed**, not a session average or whole-turn throughput.
+Shows `42 tok/s` below completed Pi replies in [Paseo](https://paseo.sh). Measures visible text streaming speed, not whole-turn latency.
 
 ## Install
 
-Requires **Paseo 0.11.1 or newer on both app and daemon**, with plugins enabled in **Settings → Plugins**. Plugins run as trusted, unsandboxed code; review the source before enabling them.
+Requires **Paseo 0.11.1+** on app and daemon, plugins enabled in **Settings → Plugins**, and a native **Pi** agent with a configured model provider.
 
 ```sh
 paseo plugin install git:yoggu/paseo-tps
 ```
 
-Alternatively, enter `git:yoggu/paseo-tps` in Settings → Plugins. Install on the daemon that runs your agents. No separate npm install or build is required: Paseo supplies the runtime libraries.
-
-Use a **native Pi agent** with a configured model provider. The plugin needs Pi's session JSONL file and an explicit per-response reasoning-token count, including zero. No additional API key or plugin configuration is needed.
-
-The installation ID remains `paseo-session-speed` for compatibility:
+No separate build or API key is needed. The runtime ID remains `paseo-session-speed`:
 
 ```sh
 paseo plugin update paseo-session-speed
-paseo plugin logs paseo-session-speed
-paseo plugin remove paseo-session-speed
 ```
 
-## Measurement
+## How it works
 
-```text
-visible tokens = output tokens − reasoning tokens
-tok/s = round((visible tokens − 1) / first-to-last text-chunk seconds)
-```
+`tok/s = (output tokens − reasoning tokens − 1) / first-to-last text-chunk seconds`
 
-Actual counts come from the matching native Pi assistant record. Pi defines reasoning as part of output; it is subtracted, not counted twice. Only the final visible answer is measured. Initial waiting, hidden reasoning and earlier tool/model calls are excluded.
+Counts come from the matching Pi session record. Initial waiting, hidden reasoning and tool calls are excluded. Chunk batching makes this an approximation, assuming one token in the first chunk.
 
-This is a **client-observed approximation**. A chunk can contain several tokens; the conventional inverse-ITL formula assumes one token in the first chunk. Neither provider-side generation timing nor hidden-reasoning generation speed is claimed.
+Missing usage or timing produces no row. Measurements do not survive a daemon restart. Session text is matched in memory; the plugin makes no external network requests. Plugins are unsandboxed code.
 
-Unsupported providers, missing counts, unmatched session records, single-chunk buffered output, canceled/failed turns and interrupted observations produce **no row**, rather than a guess. Old timeline rows keep their original calculation. Rows survive reconnects, but not a daemon restart.
-
-## Privacy
-
-Reads at most the last 2 MB of the Pi session file reported by Paseo. Response text is compared temporarily in memory and is not written to plugin storage. Only token counts and elapsed time are appended to the agent timeline. The plugin does not read API credentials or make external network requests. With a remote daemon, Paseo delivers these measurements to its connected clients.
-
-See [SECURITY.md](SECURITY.md) for the trust model and dependency limitations.
+Details: [OVERVIEW.md](OVERVIEW.md) · [SECURITY.md](SECURITY.md)
 
 ## Development
 
-Use **Node.js 24+** and npm:
+Node.js 24+: `npm ci --ignore-scripts`, `npm run typecheck`, `npm test`.
+Install locally with `paseo plugin install "$PWD"`; reload with `paseo plugin reload paseo-session-speed`.
 
-```sh
-git clone https://github.com/yoggu/paseo-tps.git
-cd paseo-tps
-npm ci --ignore-scripts
-npm run typecheck
-npm test
-paseo plugin install "$PWD"
-```
-
-After local changes: `paseo plugin reload paseo-session-speed`. Never restart the daemon just to reload this plugin.
-
-## License
-
-[MIT](LICENSE).
+[MIT license](LICENSE).
