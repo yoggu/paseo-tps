@@ -1,0 +1,5 @@
+{
+  "id": "paseo-session-speed",
+  "name": "Output speed",
+  "requirements": { "paseo": ">=0.11.1" }
+}
